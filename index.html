@@ -12,49 +12,93 @@
 	<script type="text/javascript" src="hqx.js"></script>
 	<script type="text/javascript" src="base64.js"></script>
 	<script type="text/javascript" src="canvas2image.js"></script>
+	
+	<style type="text/css">
+	/* Drag drop upload styles */
+	#dropFiles
+	{
+		min-width: 100%;
+		min-height: 100px;
+		padding: 10px;
+		border: 2px dotted #0090FF;
+		-moz-border-radius: 15px;
+		text-align: center;
+		position: relative;
+	}
+	#dropFiles:before
+	{
+		content: "Drop Sprites Here!";
+		color: #0090FF;
+		font-size: 40px;
+		font-weight: bold;
+		opacity: 1;
+		text-shadow: 2px 2px #AAA;
+		position: absolute;
+		width: 100%;
+		left: 0;
+		top: 50%;
+		margin: -25px 0 0;
+		z-index: 1;
+		text-align: center;
+	}
+	</style>
 		
     <title>Depixelizer</title>
 	<script type="text/javascript">
-		function ReadAndProcessURL(input)
+		function OnFileChange(input)
 		{
 			if (input.files && input.files[0])
 			{
-				var reader = new FileReader();
-
-				reader.onload = function (e)
-				{
-					$('#sprite').attr('src', "");
-					
-					var img = $('#sprite')[0];
-					img.onload = function(){
-						$('#sprite').width(img.naturalWidth);
-						$('#sprite').height(img.naturalHeight);
-						
-						$("#hqx_images").empty();
-						//$("#hqx_images").add( hqx(img, 4) );
-						
-						var png = convertCanvas("PNG", hqx(img, 4));
-						if (png) {
-							$("#hqx_images")[0].appendChild( png );
-						}
-					};
-					
-					$('#sprite').attr('src', e.target.result);
-				}
-
-				reader.readAsDataURL(input.files[0]);
+				ProcessImages(input);
 			}
 			
-			$('#dropzone').replaceWith($('#dropzone').clone()); 
+			$('#selectFiles').replaceWith($('#selectFiles').clone()); 
 		}
 		
 		$(function() {
-			function upload(event) { 
+			function upload(event) {
+				var dt = event.dataTransfer,
+					files = dt.files,
+					count = files.length;
 				
+				event.stopPropagation();
+				event.preventDefault();
+				
+				ProcessImages(dt);
 			}
 			
-			$('#dropzone').get(0).addEventListener('drop', upload, false);
+			var dropContainer = $('#dropFiles').get(0);
+			dropContainer.addEventListener("dragenter", function(event){dropListing.innerHTML = '';event.stopPropagation();event.preventDefault();}, false);
+			dropContainer.addEventListener("dragover", function(event){event.stopPropagation();event.preventDefault();}, false);
+			dropContainer.addEventListener('drop', upload, false);
 		});
+		
+		function ProcessImages(dataTransfer)
+		{
+			var reader = new FileReader();
+
+			reader.onload = function (e)
+			{
+				$('#sprite').attr('src', "");
+				
+				var img = $('#sprite')[0];
+				img.onload = function(){
+					$('#sprite').width(img.naturalWidth);
+					$('#sprite').height(img.naturalHeight);
+					
+					$("#hqx_images").empty();
+					
+					var png = convertCanvas("PNG", hqx(img, 4));
+					if (png) {
+						$("#hqx_images")[0].appendChild( png );
+					}
+				};
+				
+				$('#sprite').attr('src', e.target.result);
+			}
+			
+			reader.readAsDataURL(dataTransfer.files[0]);
+		}
 		
 		function convertCanvas(strType, oCanvas) {
 			var oImg;
@@ -90,11 +134,10 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Select your sprite</h3>
-		
 		<p>
 			<form method="post" enctype="multipart/form-data">
-				<input id="dropzone" class="droparea thumb" id="filesToUpload" type="file" multiple="" onchange="ReadAndProcessURL(this);" />
+				<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
+				<div id="dropFiles"></div>
 			</form>
 			<h2>Original Version</h2>
 			<img id="sprite" alt="Your Sprite" style="width: 200px; height: 50px;" />
