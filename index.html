@@ -19,7 +19,9 @@
 
 				reader.onload = function (e) {
 					$('#blah').attr('src', e.target.result);
-					document.body.appendChild( hqx($('#blah')[0], 4) );
+					hqx_images.empty();
+					
+					$("#hqx_images").add( hqx($('#blah')[0], 4) );
 				}
 
 				reader.readAsDataURL(input.files[0]);
@@ -48,6 +50,7 @@
 		<p>
 			<input type='file' onchange="ReadAndProcessURL(this);" />
 			<img id="blah" src="#" alt="your image" />
+			<div id="hqx_images"></div>
 		</p>
 
       </section>
