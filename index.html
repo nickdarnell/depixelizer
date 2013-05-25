@@ -18,10 +18,14 @@
 				var reader = new FileReader();
 
 				reader.onload = function (e) {
+					var img = $('#blah')[0];
 					$('#blah').attr('src', e.target.result);
+					$('#blah').width(img.naturalWidth);
+					$('#blah').height(img.naturalHeight);
+					
 					hqx_images.empty();
 					
-					$("#hqx_images").add( hqx($('#blah')[0], 4) );
+					$("#hqx_images").add( hqx(img, 4) );
 				}
 
 				reader.readAsDataURL(input.files[0]);
