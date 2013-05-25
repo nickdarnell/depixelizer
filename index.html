@@ -24,7 +24,8 @@
 					$('#blah').height(img.naturalHeight);
 					
 					$("#hqx_images").empty();
-					$("#hqx_images").add( hqx(img, 4) );
+					//$("#hqx_images").add( hqx(img, 4) );
+					$("#hqx_images")[0].appendChild( hqx(img, 4) );
 				}
 
 				reader.readAsDataURL(input.files[0]);
