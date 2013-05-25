@@ -68,36 +68,45 @@
 			}
 			
 			var dropContainer = $('#dropFiles').get(0);
-			dropContainer.addEventListener("dragenter", function(event){dropListing.innerHTML = '';event.stopPropagation();event.preventDefault();}, false);
+			dropContainer.addEventListener("dragenter", function(event){event.stopPropagation();event.preventDefault();}, false);
 			dropContainer.addEventListener("dragover", function(event){event.stopPropagation();event.preventDefault();}, false);
 			dropContainer.addEventListener('drop', upload, false);
 		});
 		
 		function ProcessImages(dataTransfer)
 		{
-			var reader = new FileReader();
-
-			reader.onload = function (e)
-			{
-				$('#sprite').attr('src', "");
-				
-				var img = $('#sprite')[0];
-				img.onload = function(){
-					$('#sprite').width(img.naturalWidth);
-					$('#sprite').height(img.naturalHeight);
-					
-					$("#hqx_images").empty();
-					
-					var png = convertCanvas("PNG", hqx(img, 4));
-					if (png) {
-						$("#hqx_images")[0].appendChild( png );
-					}
-				};
-				
-				$('#sprite').attr('src', e.target.result);
-			}
+			$("#output").empty();
 			
-			reader.readAsDataURL(dataTransfer.files[0]);
+			for (var fileIndex = 0; fileIndex < dataTransfer.files.length; fileIndex++)
+			{
+				var reader = new FileReader();
+
+				reader.onload = function (e)
+				{
+					$("#output").append("<h2>Original Version</h2>");
+					var $img = $("<img />");
+					var img = $img[0];
+					$("#output").append($img);
+					
+					img.onload = function() {
+						$img.width(img.naturalWidth);
+						//$img.height(img.naturalHeight);
+					
+						var png = convertCanvas("PNG", hqx(img, 4));
+						if (png) {
+							$(png).width(img.naturalWidth * 4);
+							//$(png).height(img.naturalHeight * 4);
+							
+							$img.after( png );
+							$img.after("<h2>Depixelized Version</h2>");
+						}
+					};
+					
+					$img.attr('src', e.target.result);
+				}
+				
+				reader.readAsDataURL(dataTransfer.files[fileIndex]);
+			}
 		}
 		
 		function convertCanvas(strType, oCanvas) {
@@ -139,10 +148,7 @@
 				<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
 				<div id="dropFiles"></div>
 			</form>
-			<h2>Original Version</h2>
-			<img id="sprite" alt="Your Sprite" style="width: 200px; height: 50px;" />
-			<h2>Depixelized Version</h2>
-			<div id="hqx_images"></div>
+			<div id="output"></div>
 		</p>
 
       </section>
