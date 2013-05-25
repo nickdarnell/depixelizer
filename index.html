@@ -62,12 +62,10 @@
         <h3>Welcome to GitHub Pages.</h3>
 		
 		<p>
-			<form method="post" wenctype="multipart/form-data">
+			<form method="post" enctype="multipart/form-data">
 				<input id="dropzone" type="file" class="droparea thumb" name="thumbnail" data-width="140" data-canvas="true">
-				<input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" />
+				<input onchange="ReadAndProcessURL(this);" name="filesToUpload[]" id="filesToUpload" type="file" multiple="" />
 			</form>
-			
-			<input type='file' onchange="ReadAndProcessURL(this);" />
 			<img id="blah" src="#" alt="your image" />
 			<div id="hqx_images"></div>
 		</p>
@@ -82,8 +80,6 @@
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-
-    
 
   </body>
 </html>
