@@ -13,11 +13,14 @@
 		
     <title>Depixelizer</title>
 	<script type="text/javascript">
-		function ReadAndProcessURL(input) {
-			if (input.files && input.files[0]) {
+		function ReadAndProcessURL(input)
+		{
+			if (input.files && input.files[0])
+			{
 				var reader = new FileReader();
 
-				reader.onload = function (e) {
+				reader.onload = function (e)
+				{
 					var img = $('#blah')[0];
 					$('#blah').attr('src', e.target.result);
 					$('#blah').width(img.naturalWidth);
@@ -31,16 +34,14 @@
 				reader.readAsDataURL(input.files[0]);
 			}
 		}
+		
 		$(function() {
-			$('#dropzone')
-				.get(0)
-				.addEventListener('drop', upload, false);
-
 			function upload(event) { 
-				/* Uploading will here. */
-				alert("WIN!");
+				
 			}
-		}
+			
+			$('#dropzone').get(0).addEventListener('drop', upload, false);
+		});
 	</script>
   </head>
 
@@ -52,7 +53,7 @@
           <a id="forkme_banner" href="https://github.com/nickdarnell/depixelizer">View on GitHub</a>
 
           <h1 id="project_title">Depixelizer</h1>
-          <h2 id="project_tagline">Making sprites more awesome!</h2>
+          <h2 id="project_tagline">Making sprites more awesome! (with hqx)</h2>
         </header>
     </div>
 
@@ -63,8 +64,7 @@
 		
 		<p>
 			<form method="post" enctype="multipart/form-data">
-				<input id="dropzone" type="file" class="droparea thumb" name="thumbnail" data-width="140" data-canvas="true">
-				<input onchange="ReadAndProcessURL(this);" name="filesToUpload[]" id="filesToUpload" type="file" multiple="" />
+				<input name="dropzone" class="droparea thumb" id="filesToUpload" type="file" multiple="" onchange="ReadAndProcessURL(this);" />
 			</form>
 			<img id="blah" src="#" alt="your image" />
 			<div id="hqx_images"></div>
