@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JavaScript hqx</title>
+		<script type="text/javascript" src="htttp://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="hqx.js"></script>
+		<style type="text/css"></style>
+		<script type="text/javascript">
+			function ReadAndProcessURL(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+
+					reader.onload = function (e) {
+						$('#blah').attr('src', e.target.result);
+						document.body.appendChild( hqx($('#blah')[0], 4) );
+					}
+
+					reader.readAsDataURL(input.files[0]);
+				}
+			}
+		</script>
+	</head>
+	<body style="zoom: 1;">
+		<input type='file' onchange="ReadAndProcessURL(this);" />
+        <img id="blah" src="#" alt="your image" />
+	</body>
+</html>
