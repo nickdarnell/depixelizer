@@ -83,12 +83,13 @@
 
 				reader.onload = function (e)
 				{
-					$("#output").append("<h2>Original Version</h2>");
 					var $img = $("<img />");
 					var img = $img[0];
 					$("#output").append($img);
 					
 					img.onload = function() {
+						$img.before("<h2>Original (" + img.naturalWidth + " x " + img.naturalHeight + ")</h2>");
+						
 						$img.width(img.naturalWidth);
 						//$img.height(img.naturalHeight);
 					
@@ -98,7 +99,7 @@
 							//$(png).height(img.naturalHeight * 4);
 							
 							$img.after( png );
-							$img.after("<h2>Depixelized Version</h2>");
+							$img.after("<h2>Depixelized (" + (img.naturalWidth * 4) + " x " + (img.naturalHeight * 4) + ")</h2>");
 						}
 					};
 					
@@ -144,8 +145,9 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 		<p>
-			<form method="post" enctype="multipart/form-data">
+			<form method="post" enctype="multipart/form-data" style="text-align: center;">
 				<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
+				<h3>or</h3>
 				<div id="dropFiles"></div>
 			</form>
 			<div id="output"></div>
