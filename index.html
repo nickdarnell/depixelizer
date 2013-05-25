@@ -21,18 +21,25 @@
 
 				reader.onload = function (e)
 				{
-					var img = $('#blah')[0];
-					$('#blah').attr('src', e.target.result);
-					$('#blah').width(img.naturalWidth);
-					$('#blah').height(img.naturalHeight);
+					$('#sprite').attr('src', "");
 					
-					$("#hqx_images").empty();
-					//$("#hqx_images").add( hqx(img, 4) );
-					$("#hqx_images")[0].appendChild( hqx(img, 4) );
+					var img = $('#sprite')[0];
+					img.onload = function(){
+						$('#sprite').width(img.naturalWidth);
+						$('#sprite').height(img.naturalHeight);
+						
+						$("#hqx_images").empty();
+						//$("#hqx_images").add( hqx(img, 4) );
+						$("#hqx_images")[0].appendChild( hqx(img, 4) );
+					};
+					
+					$('#sprite').attr('src', e.target.result);
 				}
 
 				reader.readAsDataURL(input.files[0]);
 			}
+			
+			$('#dropzone').replaceWith($('#dropzone').clone()); 
 		}
 		
 		$(function() {
@@ -66,7 +73,7 @@
 			<form method="post" enctype="multipart/form-data">
 				<input id="dropzone" class="droparea thumb" id="filesToUpload" type="file" multiple="" onchange="ReadAndProcessURL(this);" />
 			</form>
-			<img id="blah" src="#" alt="your image" />
+			<img id="sprite" alt="Your Sprite" style="width: 200px; height: 50px;" />
 			<div id="hqx_images"></div>
 		</p>
 
