@@ -4,12 +4,14 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Depixelizer : An online implementation of the hqx algorithm.  Implemented entirely in Javascript!" />
+    <meta name="description" content="Depixelizer : Making sprites more awesome! (with hqNx and JavaScript)" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="hqx.js"></script>
+	<script type="text/javascript" src="base64.js"></script>
+	<script type="text/javascript" src="canvas2image.js"></script>
 		
     <title>Depixelizer</title>
 	<script type="text/javascript">
@@ -30,7 +32,11 @@
 						
 						$("#hqx_images").empty();
 						//$("#hqx_images").add( hqx(img, 4) );
-						$("#hqx_images")[0].appendChild( hqx(img, 4) );
+						
+						var png = convertCanvas("PNG", hqx(img, 4));
+						if (png) {
+							$("#hqx_images")[0].appendChild( png );
+						}
 					};
 					
 					$('#sprite').attr('src', e.target.result);
@@ -49,6 +55,23 @@
 			
 			$('#dropzone').get(0).addEventListener('drop', upload, false);
 		});
+		
+		function convertCanvas(strType, oCanvas) {
+			var oImg;
+			if (strType == "PNG")
+				oImg = Canvas2Image.saveAsPNG(oCanvas, true);
+			else if (strType == "BMP")
+				oImg = Canvas2Image.saveAsBMP(oCanvas, true);
+			else if (strType == "JPEG")
+				oImg = Canvas2Image.saveAsJPEG(oCanvas, true);
+
+			if (!oImg) {
+				alert("Sorry, this browser is not capable of saving " + strType + " files!");
+				return undefined;
+			}
+			
+			return oImg;
+		}
 	</script>
   </head>
 
@@ -60,20 +83,22 @@
           <a id="forkme_banner" href="https://github.com/nickdarnell/depixelizer">View on GitHub</a>
 
           <h1 id="project_title">Depixelizer</h1>
-          <h2 id="project_tagline">Making sprites more awesome! (with hqx)</h2>
+          <h2 id="project_tagline">Making sprites more awesome! (with hqNx)</h2>
         </header>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h3>Select your sprite</h3>
 		
 		<p>
 			<form method="post" enctype="multipart/form-data">
 				<input id="dropzone" class="droparea thumb" id="filesToUpload" type="file" multiple="" onchange="ReadAndProcessURL(this);" />
 			</form>
+			<h2>Original Version</h2>
 			<img id="sprite" alt="Your Sprite" style="width: 200px; height: 50px;" />
+			<h2>Depixelized Version</h2>
 			<div id="hqx_images"></div>
 		</p>
 
@@ -83,8 +108,8 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Depixelizer maintained by <a href="https://github.com/nickdarnell">nickdarnell</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p class="copyright">Depixelizer maintained by <a href="https://github.com/nickdarnell">Nick Darnell</a></p>
+        <p>hqNx implementation by <a href="https://github.com/phoboslab/js-hqx">PhobosLab</a></p>
       </footer>
     </div>
 
