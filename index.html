@@ -179,14 +179,21 @@
 						//$img.height(img.naturalHeight);
 						
 						var hqxMultplier = getSelectedHqxMultiplier();
+						var hqxCanvas = hqx(img, hqxMultplier);
 					
-						var png = convertCanvas("PNG", hqx(img, hqxMultplier));
+						var png = convertCanvas("PNG", hqxCanvas);
 						if (png) {
 							$(png).width(img.naturalWidth * hqxMultplier);
 							//$(png).height(img.naturalHeight * hqxMultplier);
 							
 							$img.after( png );
 							$img.after("<h2>Depixelized (" + (img.naturalWidth * hqxMultplier) + " x " + (img.naturalHeight * hqxMultplier) + ")</h2>");
+							
+							// TODO This would be nice, but I'm unable to get it to download with the image
+							// extension, or the file name.  Both would be useful to set.
+							//$(png).click(function() {
+							//	saveCanvas("PNG", hqxCanvas);
+							//});
 						}
 					};
 					
@@ -212,6 +219,21 @@
 			}
 			
 			return oImg;
+		}
+		
+		function saveCanvas(strType, oCanvas) {
+			var bRes = false;
+			if (strType == "PNG")
+				bRes = Canvas2Image.saveAsPNG(oCanvas);
+			else if (strType == "BMP")
+				bRes = Canvas2Image.saveAsBMP(oCanvas);
+			else if (strType == "JPEG")
+				bRes = Canvas2Image.saveAsJPEG(oCanvas);
+
+			if (!bRes) {
+				alert("Sorry, this browser is not capable of saving " + strType + " files!");
+				return false;
+			}
 		}
 	</script>
   </head>
@@ -256,8 +278,7 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Depixelizer maintained by <a href="http://www.nickdarnell.com/">Nick Darnell</a>.</p>
-        <p>hqNx implementation by <a href="https://github.com/phoboslab/js-hqx">PhobosLab</a>.</p>
+        <p class="copyright">Depixelizer created by <a href="http://www.nickdarnell.com/">Nick Darnell</a>. <span style="float: right;">hqNx by <a href="https://github.com/phoboslab/js-hqx">PhobosLab</a>.</span></p>
       </footer>
     </div>
 
