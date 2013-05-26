@@ -6,9 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Depixelizer : Making sprites more awesome! (with hqNx and JavaScript)" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/flick/jquery-ui-1.10.3.custom.min.css" />
+  
 	<script type="text/javascript" src="hqx.js"></script>
 	<script type="text/javascript" src="base64.js"></script>
 	<script type="text/javascript" src="canvas2image.js"></script>
@@ -41,6 +44,74 @@
 		z-index: 1;
 		text-align: center;
 	}
+	.file-upload {
+		overflow: hidden;
+		display: inline-block;
+		position: relative;	
+		vertical-align: middle;
+		text-align: center;
+
+		/* Cosmetics */
+		color: #fff;
+		border: 2px solid #2FA2FF;
+		background: #0090FF;
+
+		/* Nice if your browser can do it */
+		-moz-border-radius: 8px;
+		-webkit-border-radius: 8px;
+		border-radius: 8px;
+		text-shadow: #000 1px 1px 4px;
+		}
+		
+	.file-upload:hover { 
+		background: #2FA2FF; 
+		}
+
+	.file-upload.focus { 
+		outline: 2px solid yellow;
+		}
+
+	.file-upload input {
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: 0;
+		font-size: 70px;
+
+		/* Loses tab index in webkit if width is set to 0 */
+		opacity: 0;
+		filter: alpha(opacity=0);
+		}
+
+	.file-upload strong { 
+		font: normal 1.75em arial,sans-serif; 
+		}	
+		
+	.file-upload span {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: inline-block;
+
+		/* Adjust button text vertical alignment */
+		padding-top: .45em;
+	}
+
+	/* Adjust the button size */	
+	.file-upload { height: 3em; }
+	.file-upload,
+	.file-upload span {	width: 14em; }	
+
+	.file-upload-status {
+		margin-left: 10px;
+		vertical-align: middle;
+		padding: 7px 11px;
+		font-weight: bold;	
+		font-size: 16px;
+		color: #888;
+		background: #f8f8f8;
+		border: 3px solid #ddd;
+	}
 	</style>
 		
     <title>Depixelizer</title>
@@ -55,23 +126,37 @@
 			$('#selectFiles').replaceWith($('#selectFiles').clone()); 
 		}
 		
-		$(function() {
-			function upload(event) {
-				var dt = event.dataTransfer,
-					files = dt.files,
-					count = files.length;
-				
-				event.stopPropagation();
-				event.preventDefault();
-				
-				ProcessImages(dt);
-			}
+		function OnFilesDropped(event) {
+			var dt = event.dataTransfer,
+				files = dt.files,
+				count = files.length;
 			
+			event.stopPropagation();
+			event.preventDefault();
+			
+			ProcessImages(dt);
+		}
+		
+		$(function() {
+			$("#multiplier").buttonset();
+					
 			var dropContainer = $('#dropFiles').get(0);
 			dropContainer.addEventListener("dragenter", function(event){event.stopPropagation();event.preventDefault();}, false);
 			dropContainer.addEventListener("dragover", function(event){event.stopPropagation();event.preventDefault();}, false);
-			dropContainer.addEventListener('drop', upload, false);
+			dropContainer.addEventListener('drop', OnFilesDropped, false);
 		});
+		
+		function getSelectedHqxMultiplier()
+		{
+			if ($("#multiplier2").is(':checked'))
+				return 2;
+			else if ($("#multiplier3").is(':checked'))
+				return 3;
+			else if ($("#multiplier4").is(':checked'))
+				return 4;
+				
+			return 4;
+		}
 		
 		function ProcessImages(dataTransfer)
 		{
@@ -92,14 +177,16 @@
 						
 						$img.width(img.naturalWidth);
 						//$img.height(img.naturalHeight);
+						
+						var hqxMultplier = getSelectedHqxMultiplier();
 					
-						var png = convertCanvas("PNG", hqx(img, 4));
+						var png = convertCanvas("PNG", hqx(img, hqxMultplier));
 						if (png) {
-							$(png).width(img.naturalWidth * 4);
-							//$(png).height(img.naturalHeight * 4);
+							$(png).width(img.naturalWidth * hqxMultplier);
+							//$(png).height(img.naturalHeight * hqxMultplier);
 							
 							$img.after( png );
-							$img.after("<h2>Depixelized (" + (img.naturalWidth * 4) + " x " + (img.naturalHeight * 4) + ")</h2>");
+							$img.after("<h2>Depixelized (" + (img.naturalWidth * hqxMultplier) + " x " + (img.naturalHeight * hqxMultplier) + ")</h2>");
 						}
 					};
 					
@@ -145,8 +232,18 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 		<p>
+			<div id="multiplier" style="font-size: 2em; text-align: center;">
+				<input type="radio" id="multiplier2" name="radio" /><label for="multiplier2">2x</label>
+				<input type="radio" id="multiplier3" name="radio" /><label for="multiplier3">3x</label>
+				<input type="radio" id="multiplier4" name="radio" checked="checked" /><label for="multiplier4">4x</label>
+			</div>
 			<form method="post" enctype="multipart/form-data" style="text-align: center;">
-				<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
+				<center>
+					<label class="file-upload">
+						<span><strong>Select Sprites</strong></span>
+						<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
+					</label>
+				</center>
 				<h3>or</h3>
 				<div id="dropFiles"></div>
 			</form>
@@ -160,7 +257,7 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Depixelizer maintained by <a href="http://www.nickdarnell.com/">Nick Darnell</a>.</p>
-        <p>hqNx implementation by <a href="https://github.com/phoboslab/js-hqx">PhobosLab</a></p>
+        <p>hqNx implementation by <a href="https://github.com/phoboslab/js-hqx">PhobosLab</a>.</p>
       </footer>
     </div>
 
