@@ -44,74 +44,31 @@
 		z-index: 1;
 		text-align: center;
 	}
-	.file-upload {
-		overflow: hidden;
-		display: inline-block;
-		position: relative;	
-		vertical-align: middle;
-		text-align: center;
-
-		/* Cosmetics */
-		color: #fff;
-		border: 2px solid #2FA2FF;
-		background: #0090FF;
-
-		/* Nice if your browser can do it */
-		-moz-border-radius: 8px;
-		-webkit-border-radius: 8px;
-		border-radius: 8px;
-		text-shadow: #000 1px 1px 4px;
-		}
-		
-	.file-upload:hover { 
-		background: #2FA2FF; 
-		}
-
-	.file-upload.focus { 
-		outline: 2px solid yellow;
-		}
-
-	.file-upload input {
-		position: absolute;
-		top: 0;
-		left: 0;
-		margin: 0;
-		font-size: 70px;
-
-		/* Loses tab index in webkit if width is set to 0 */
-		opacity: 0;
-		filter: alpha(opacity=0);
-		}
-
-	.file-upload strong { 
-		font: normal 1.75em arial,sans-serif; 
-		}	
-		
-	.file-upload span {
-		position: absolute;
-		top: 0;
-		left: 0;
-		display: inline-block;
-
-		/* Adjust button text vertical alignment */
-		padding-top: .45em;
-	}
-
-	/* Adjust the button size */	
-	.file-upload { height: 3em; }
-	.file-upload,
-	.file-upload span {	width: 14em; }	
-
-	.file-upload-status {
-		margin-left: 10px;
-		vertical-align: middle;
-		padding: 7px 11px;
-		font-weight: bold;	
-		font-size: 16px;
-		color: #888;
-		background: #f8f8f8;
-		border: 3px solid #ddd;
-	}
+	
+	.file_button_container,
+    .file_button_container input {
+	     background: transparent url(images/upload_normal.png) left top no-repeat;
+	     height: 52px;
+	     width: 228px;
+     }
+	 
+	 .file_button_container input:hover {
+	     background: transparent url(images/upload_hover.png) left top no-repeat;
+     }
+    
+     .file_button_container {
+	     background: transparent url(images/upload_normal.png) left top no-repeat;
+     }
+	 
+	 .file_button_container:hover {
+	     background: transparent url(images/upload_hover.png) left top no-repeat;
+     }
+    
+     .file_button_container input {
+	     opacity: 0;
+		 -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+		 filter: alpha(opacity=0);
+     }
 	</style>
 		
     <title>Depixelizer</title>
@@ -270,10 +227,9 @@
 			</div>
 			<form method="post" enctype="multipart/form-data" style="text-align: center;">
 				<center>
-					<label class="file-upload">
-						<span><strong>Select Sprites</strong></span>
+					<div class="file_button_container">
 						<input id="selectFiles" type="file" multiple="" onchange="OnFileChange(this);" />
-					</label>
+					</div>
 				</center>
 				<h3>or</h3>
 				<div id="dropFiles"></div>
